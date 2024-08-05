@@ -6,7 +6,11 @@
 #include <tuple>
 #include <string>
 
-/* FUNCTIONS */
+/* VARIABLES */
 
+extern int load_duration;
+
+/* FUNCTIONS */
+void showLoadingBar(int duration);
 void printMenu();
 bool initMenu();

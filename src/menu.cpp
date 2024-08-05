@@ -5,9 +5,16 @@
 #include <map>
 #include <tuple>
 #include <string>
+#include <chrono>
+#include <thread>
 
 #include "/Users/katrinasharonin/Downloads/SimTableC++/include/menu.h"
 #include "/Users/katrinasharonin/Downloads/SimTableC++/include/board.h"
+
+/* VARIABLES */
+int load_duration = 100;
+
+/* FUNCTIONS */
 
 void printMenu() {
 
@@ -27,10 +34,33 @@ void printMenu() {
     std::cout << "Wildfire Situation Training Simulator by Katrina Sharonin \n \n";
 
     /* Options */
-    std::cout << "1. Start Game\n";
-    std::cout << "2. Instructions\n";
-    std::cout << "3. Quit\n";
+    std::cout << "[1] Start Game\n";
+    std::cout << "[2] Instructions\n";
+    std::cout << "[3] Quit\n";
 
+}
+
+void showLoadingBar(int duration) {
+    const int barWidth = 50;
+    std::cout << "[";
+    for (int i = 0; i < barWidth; ++i) {
+        std::cout << " ";
+    }
+    std::cout << "]";
+
+    for (int i = 0; i <= barWidth; ++i) {
+        std::cout.flush();
+        std::this_thread::sleep_for(std::chrono::milliseconds(duration * 20 / barWidth));
+        std::cout << "\r[";
+        for (int j = 0; j < i; ++j) {
+            std::cout << "=";
+        }
+        for (int j = i; j < barWidth; ++j) {
+            std::cout << " ";
+        }
+        std::cout << "]";
+    }
+    std::cout << "\n" << std::endl;
 }
 
 bool initMenu(){
@@ -44,7 +74,8 @@ bool initMenu(){
         std::getline(std::cin, user_input);
 
         if (user_input == "1") {
-            std::cout << "\n Loading new game..." << std::endl;
+            std::cout << "\nLoading new game... \n" << std::endl;
+            showLoadingBar(load_duration);
             return true;
         }
         else if (user_input == "2") {

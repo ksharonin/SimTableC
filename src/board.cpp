@@ -1,7 +1,8 @@
 /**
  * @file board.cpp
  * @author Katrina Sharonin
- * @brief board state, color display
+ * @brief board state, color display; manages forever loop and input
+ * s.t. simulation is called and returns per interaction
  * 
  */
 
@@ -14,6 +15,7 @@
 #include <string>
 
 #include "/Users/katrinasharonin/Downloads/SimTableC++/include/board.h"
+#include "/Users/katrinasharonin/Downloads/SimTableC++/include/simulation.h"
 
 /* DEFINE VARIABLES */
 
@@ -25,13 +27,16 @@ int MAX_COLS = 100;
 int ROWS = 26;
 int COLS = 22;
 int MILE_CNT = 3; // for 3 cells == x miles
-char NORTH_DIR = '^'; // compass dir
-std::string CURR_TIME = "13:57 PDT";
 
 /* BOARD STATE */
-std::map<std::pair<int, int>, std::string> boardState; // TODO: work on making into unordered / O(1) access
+std::map<std::pair<int, int>, std::string> boardState;
+std::string DESCRIPTION = "";
+std::string WEATHER = "";
+std::map<std::string, int> RESOURCES;
 
-/* PRIVATE */
+char NORTH_DIR = '^'; // compass dir
+std::string CURR_TIME = "13:57 PDT";
+std::string WIND_DIR = "->";
 
 std::map<std::string, std::string> color_codes = {
     // Basic text colors
@@ -54,6 +59,7 @@ std::map<std::string, std::string> color_codes = {
     {"BRIGHT_MAGENTA", "\033[95m"},
     {"BRIGHT_CYAN", "\033[96m"},
     {"BRIGHT_WHITE", "\033[97m"},
+    {"BG_BROWN", "\033[48;5;94m"},
     
     // Background colors
     {"BG_BLACK", "\033[40m"},
@@ -77,14 +83,15 @@ std::map<std::string, std::string> color_codes = {
 };
 
 std::map<std::string, std::string> legend_color = {
-    {"_X", "BG_RED"},                       // fire
+    {"__", "BG_RED"},                       // fire
     {"~~", "BG_BLUE"},                      // water
     {"\033[4mT6\033[0m", "BRIGHT_GREEN"},   // type 6 eng
     {"\033[4mT3\033[0m", "GREEN"},          // type 3 eng
     {"_/", "DEFAULT"},                      // slopes
     {"//", "DEFAULT"},
     {"\\_", "DEFAULT"},
-    {"\\\\_", "DEFAULT"}
+    {"\\\\_", "DEFAULT"},
+    {"BU", "BG_BROWN"}                      // burned
 };
 
 /* FUNCTIONS */
@@ -150,16 +157,39 @@ void printBoard(int rows, int cols) {
     /* Mile len*/
     std::cout << " |________| " << MILE_CNT << " MILES"; 
     /* Compass direction */
-    std::cout << "    " << NORTH_DIR << " NORTH";
+    std::cout << "   " << "NORTH: " << NORTH_DIR;
     /* Time */
-    std::cout << "    " << "TIME: " << CURR_TIME << "\n" << std::endl;
+    std::cout << "   " << "TIME: " << CURR_TIME;
+    /* Wind direction */
+    std::cout << "   " << "WIND DIR: " << WIND_DIR << "\n" << std::endl;
 }
 
 void initGame() {
 
-    /* MANUAL TESTS */
-    setBoardCell(13, 6, "_X");
-    setBoardCell(14, 7, "_X");
+    /* Fetch description, weather, resources, time etc */
+    // state_collection generated = genSimulation();
+    // DESCRIPTION = generated.first
+
+    /* Display and interact */
+    // TODO
+
+    /* MANUAL DRAWINGS */
+
+    // draw fire
+    for (int i = 11; i < 14; i++ ) {
+        for (int j = 6; j < 10; j++ ) {
+            setBoardCell(i, j, "__");
+        }
+    }
+
+    setBoardCell(12, 5, "__");
+    setBoardCell(12, 6, "__");
+    setBoardCell(13, 6, "__");
+    setBoardCell(14, 7, "__");
+    setBoardCell(14, 8, "BU");
+    setBoardCell(14, 9, "BU");
+    setBoardCell(15, 8, "__");
+    setBoardCell(15, 9, "BU");
     setBoardCell(23, 10, "~~");
     setBoardCell(23, 11, "~~");
     setBoardCell(24, 11, "~~");
